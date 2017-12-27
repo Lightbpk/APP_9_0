@@ -3,6 +3,7 @@ package bpk.light.app_9_0;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -19,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         btn1 = (Button) findViewById(R.id.btn1);
-        sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
+        sharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPreferences.edit();
         i = sharedPreferences.getInt("inc",0);
         View.OnClickListener listener = new View.OnClickListener() {

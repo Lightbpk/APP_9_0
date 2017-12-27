@@ -27,6 +27,7 @@ public class FourActivity extends AppCompatActivity {
         btnSet2 = (Button)findViewById(R.id.btnSet2);
         scanTime = (EditText)findViewById(R.id.scanTime);
         brutTime = (EditText) findViewById(R.id.brutTime);
+
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPreferences.edit();
         View.OnClickListener listener = new View.OnClickListener() {
@@ -76,6 +77,7 @@ public class FourActivity extends AppCompatActivity {
                 editor.apply();
             }
         });
+
     }
     @Override
     public void onBackPressed() {

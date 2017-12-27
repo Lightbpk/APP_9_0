@@ -1,6 +1,5 @@
 package bpk.light.app_9_0;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -25,8 +23,9 @@ public class ThreeActivity extends AppCompatActivity {
     String LL = "LightLog",password;
     TextView tablo;
     SoundPool sp;
-    boolean runable = true;
     SharedPreferences sharedPreferences;
+    Timer timer = new Timer();
+    Timer timer1 = new Timer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,14 +37,15 @@ public class ThreeActivity extends AppCompatActivity {
         btnSet = (Button) findViewById(R.id.btnSet);
         btnCancel = (Button) findViewById(R.id.btnCancel);
         sandClock = (ImageView) findViewById(R.id.sandClock);
-        //sandClock.setVisibility(View.INVISIBLE);
+        sandClock.setVisibility(View.INVISIBLE);
         tablo = (TextView) findViewById(R.id.tablo);
         sp = new SoundPool(1, AudioManager.STREAM_MUSIC,0);
         compliteSound = sp.load(this,R.raw.complitesound,1);
+        btnBrut.setEnabled(false);
         View.OnClickListener listenerScan = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //sandClock.setVisibility(View.VISIBLE);
+                sandClock.setVisibility(View.VISIBLE);
                 try {
                     Thread.sleep(scanSleep);
                 } catch (InterruptedException e) {
@@ -58,7 +58,7 @@ public class ThreeActivity extends AppCompatActivity {
                     defPass = defPass+"0";
                 }
                 tablo.setText(defPass);
-                btnBrut.setClickable(true);
+                btnBrut.setEnabled(true);
                 sandClock.setVisibility(View.INVISIBLE);
             }
         };
@@ -66,13 +66,8 @@ public class ThreeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sandClock.setVisibility(View.VISIBLE);
-                Timer timer = new Timer();
-                while (runable){
-                    tablo.setText(""+Math.random());
-                }
                 timer.schedule(new BrutTask(),brutSleep*1000);
-                sandClock.setVisibility(View.INVISIBLE);
-                tablo.setText(password);
+                timer1.schedule(new BrutRand(),0,100);
             }
         };
         View.OnClickListener listenerSet = new View.OnClickListener() {
@@ -112,7 +107,30 @@ public class ThreeActivity extends AppCompatActivity {
 
        @Override
        public void run() {
-           runable = false;
+           runOnUiThread(new Runnable() {
+               @Override
+               public void run() {
+                   timer1.cancel();
+                   sandClock.setVisibility(View.INVISIBLE);
+                   tablo.setText(password);
+                   sandClock.setVisibility(View.INVISIBLE);
+                   sp.play(compliteSound,1,1,0,0,1);
+               }
+           });
+
        }
    }
+    public class BrutRand extends TimerTask{
+
+        @Override
+        public void run() {
+           Log.d(LL,"Timer start");
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                     tablo.setText(""+Math.random());
+                }
+            });
+        }
+    }
 }
